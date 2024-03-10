@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # NumPy Arrays
 mylist = [1, 2, 3]
@@ -64,19 +65,52 @@ plt.show()
 #help(plt.figure)
 #plt.savefig('linear.png')
 
-fig = plt.figure() #Creates a blank canvas 432x288 with 0 Axes
-plt.figure(figsize=(10, 10))
-axes = fig.add_axes([0,0,1,1])
-axes.plot(x,y)
+# fig = plt.figure() #Creates a blank canvas 432x288 with 0 Axes
+# plt.figure(figsize=(10, 10))
+# axes = fig.add_axes([0,0,1,1])
+# axes.plot(x,y)
 
-a = np.linspace(0, 10, 11)
-b = a**4
-c = np.arange(0,10)
-d = 2*c
-add = fig.add_axes([0,0,1,1])
-add.plot(c,d)
+# a = np.linspace(0, 10, 11)
+# b = a**4
+# c = np.arange(0,10)
+# d = 2*c
+# add = fig.add_axes([0,0,1,1])
+# add.plot(c,d)
 
-#fig, axes = plt.subplots(nrows=1,ncols=2)
+#fig, axes = plt.subplots(nrows=2,ncols=2)
+#plt.tight_layout()
+#axes[0][0].plot(x,y)
+#fig.subplots_adjust(wpsace=1,hspace=0.5)
+#fig.set_figwidth(10)
+
+x5 = np.linspace(0,11,10)
+fig5 = plt.figure()
+ax5 = fig5.add_axes([0,0,1,1])
+ax5.plot(x5,x5, label='X vs X')
+ax5.plot(x,x**3, label='X vs X',color='blue',lw=2,ls='-',marker='+',ms=5)
+ax5.legend(loc=(1.1,0.5))
+plt.show()
+
+################################################################################################
+
+#Exercises
+
+#1
+m = np.linspace(0,10,11)
+c = 3* 10**8
+E = m* c**2
+
+#2
+plt.plot(m,E,color='red')
+plt.title('E=mc**2')
+plt.xlabel('Mass in g')
+plt.ylabel('Energy in J')
+plt.xlim(0,10)
+
+#3
+plt.yscale('log')
+plt.grid()
+plt.show()
 
 ################################################################################################
 
@@ -111,9 +145,20 @@ add.plot(c,d)
 # Real World -> Collect & Store Data -> Clean & Organize Data -> Exploratory Data Analysis ->
 # ML Models (SL=Predict Outcome or UL=Discover Patterns in Data)
 
-# Supervised ML Process
+# Supervised ML Processgi
 # Many algorithms have adjustable values
 # Data -> X: Features, y: Label -> 1. Training Data Set | 2. Test Data Set
 # 1. Training Data Set -> Fit/Train Model -> Adjust as Needed OR Evaluate Performance
 # 2. Test Data Set -> Evaluate Performance
 # Evaluate Performance -> Deploy Model as Service/Dashboard/App -> Data Product -> Real World
+
+################################################################################################
+
+#Pandas
+myindex = ['Canada', 'Uganda', 'Australia']
+mydata = ['CA', 'UG', 'AU']
+myser = pd.Series(data=mydata, index=myindex)
+print(myser)
+
+ages = {'Jean-Paul':5,'Francois':10,'Genevieve':50}
+pd.series(ages)
