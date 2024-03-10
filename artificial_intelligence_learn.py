@@ -1,6 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
+from sklearn import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_squared_error
 
 # NumPy Arrays
 mylist = [1, 2, 3]
@@ -159,6 +164,72 @@ myindex = ['Canada', 'Uganda', 'Australia']
 mydata = ['CA', 'UG', 'AU']
 myser = pd.Series(data=mydata, index=myindex)
 print(myser)
+print(myser[0])
+print(myser['Uganda'])
+print(myser.keys())
 
 ages = {'Jean-Paul':5,'Francois':10,'Genevieve':50}
-pd.series(ages)
+pd.Series(ages)
+
+mycompanies = ['Microsoft', 'Google', 'Nvidia']
+sales = [0.5, 2, 10]
+
+mycompanies1 = ['Microsoft', 'Google', 'Nvidia']
+sales1 = [2, 3, 20]
+
+sales_q1 = pd.Series(index=mycompanies,data=sales)
+sales_q2 = pd.Series(index=mycompanies1,data=sales1)
+total_sales = sales_q1.add(sales_q2,fill_value=0)
+print(total_sales)
+
+#Dataframes in Pandas
+
+np.random.seed(20)
+random_data = np.random.randint(0, 101, (4,4))
+print(random_data)
+my_provinces = ['QC', 'ON', 'AB', 'VA']
+my_columns = ['Jan', 'Feb', 'Jun', 'Jul']
+df = pd.DataFrame(data=random_data,index=my_provinces, columns=my_columns)
+df.set_index('Jun')
+df.reset_index()
+drop = df.drop('Jul',axis=1)
+df.iloc[0:2]
+one_row = df.iloc[1]
+df = df.append(one_row)
+df.iloc[['QC', 'VA']]
+df.loc['Jan']
+
+print(drop)
+print(df)
+print(df.info())
+print(df.describe())
+print(df.describe().transpose())
+print(df.head(2))
+print(df.columns)
+print(df.index)
+print(df['Jan'])
+
+#Files with Pandas
+#read = pd.read_csv('C:\\Users\\username\\file_path_here.csv')
+
+################################################################################################
+
+#Scikit-learn
+
+# Train | Test Split Procedure
+# 0. Clean and adjust data as necessary X and y
+# 1. Split Data in Train/Test for both X and y
+# 2. Fit/Train Scaler on Training X Data
+# 3. Scale X Test Data
+# 4. Create Model
+# 5. Fit/Train Model on X Train Data
+# 6. Evaluate Model on X Test Data (by creating predictions and comparing to Y_test)
+# 7. Adjust Parameters as Necessary and repeat steps 5 and 6
+
+#model = Ridge(alpha=100)
+#model.fit(X_train,y_train)
+#y_pred = model.predict(X_test)
+#print(mean_squared_error(y_test, y_pred))
+#model2 = Ridge(alpha=1)
+#model2.fit(X_train,y_train)
+#y_pred_two = model2.predict(X_test)
