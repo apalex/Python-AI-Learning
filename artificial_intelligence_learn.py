@@ -2,10 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from sklearn import StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+#https://www.udemy.com/course/practical-ai-with-python-and-reinforcement-learning/
 
 # NumPy Arrays
 mylist = [1, 2, 3]
@@ -46,26 +53,26 @@ arr.shape #Returns shape of the array
 # To avoid this, use the command slice_of_arr = arr.copy() to create a copy
  
 # Operations
-new_arr = np.arange(0, 10)
-new_arr += 5 #Will addition every element inside the array by 5
-new_arr += new_arr
-arr2d = np.arange(0,25).reshape(5,5)
-arr2d.shape
-arr2d.sum(axis=0) #Additions all the columns
-arr2d.sum(axis=1) #Additions all the rows
+# new_arr = np.arange(0, 10)
+# new_arr += 5 #Will addition every element inside the array by 5
+# new_arr += new_arr
+# arr2d = np.arange(0,25).reshape(5,5)
+# arr2d.shape
+# arr2d.sum(axis=0) #Additions all the columns
+# arr2d.sum(axis=1) #Additions all the rows
 
 ################################################################################################
 
 # Matplotlib
-x = np.arange(0, 10)
-y = 2*x
-plt.plot(x, y)
-plt.ylabel('Y-axis')
-plt.xlabel('X-axis')
-plt.title('Linear Graph')
-plt.xlim(0,10)
-plt.ylim(0,10)
-plt.show()
+# x = np.arange(0, 10)
+# y = 2*x
+# plt.plot(x, y)
+# plt.ylabel('Y-axis')
+# plt.xlabel('X-axis')
+# plt.title('Linear Graph')
+# plt.xlim(0,10)
+# plt.ylim(0,10)
+# plt.show()
 #help(plt.savefig)
 #help(plt.figure)
 #plt.savefig('linear.png')
@@ -88,34 +95,34 @@ plt.show()
 #fig.subplots_adjust(wpsace=1,hspace=0.5)
 #fig.set_figwidth(10)
 
-x5 = np.linspace(0,11,10)
-fig5 = plt.figure()
-ax5 = fig5.add_axes([0,0,1,1])
-ax5.plot(x5,x5, label='X vs X')
-ax5.plot(x,x**3, label='X vs X',color='blue',lw=2,ls='-',marker='+',ms=5)
-ax5.legend(loc=(1.1,0.5))
-plt.show()
+# x5 = np.linspace(0,11,10)
+# fig5 = plt.figure()
+# ax5 = fig5.add_axes([0,0,1,1])
+# ax5.plot(x5,x5, label='X vs X')
+# ax5.plot(x,x**3, label='X vs X',color='blue',lw=2,ls='-',marker='+',ms=5)
+# ax5.legend(loc=(1.1,0.5))
+# plt.show()
 
 ################################################################################################
 
 #Exercises
 
 #1
-m = np.linspace(0,10,11)
-c = 3* 10**8
-E = m* c**2
+# m = np.linspace(0,10,11)
+# c = 3* 10**8
+# E = m* c**2
 
-#2
-plt.plot(m,E,color='red')
-plt.title('E=mc**2')
-plt.xlabel('Mass in g')
-plt.ylabel('Energy in J')
-plt.xlim(0,10)
+# #2
+# plt.plot(m,E,color='red')
+# plt.title('E=mc**2')
+# plt.xlabel('Mass in g')
+# plt.ylabel('Energy in J')
+# plt.xlim(0,10)
 
-#3
-plt.yscale('log')
-plt.grid()
-plt.show()
+# #3
+# plt.yscale('log')
+# plt.grid()
+# plt.show()
 
 ################################################################################################
 
@@ -184,30 +191,30 @@ print(total_sales)
 
 #Dataframes in Pandas
 
-np.random.seed(20)
-random_data = np.random.randint(0, 101, (4,4))
-print(random_data)
-my_provinces = ['QC', 'ON', 'AB', 'VA']
-my_columns = ['Jan', 'Feb', 'Jun', 'Jul']
-df = pd.DataFrame(data=random_data,index=my_provinces, columns=my_columns)
-df.set_index('Jun')
-df.reset_index()
-drop = df.drop('Jul',axis=1)
-df.iloc[0:2]
-one_row = df.iloc[1]
-df = df.append(one_row)
-df.iloc[['QC', 'VA']]
-df.loc['Jan']
+# np.random.seed(20)
+# random_data = np.random.randint(0, 101, (4,4))
+# print(random_data)
+# my_provinces = ['QC', 'ON', 'AB', 'VA']
+# my_columns = ['Jan', 'Feb', 'Jun', 'Jul']
+# df = pd.DataFrame(data=random_data,index=my_provinces, columns=my_columns)
+# df.set_index('Jun')
+# df.reset_index()
+# drop = df.drop('Jul',axis=1)
+# df.iloc[0:2]
+# one_row = df.iloc[1]
+# df = df.append(one_row)
+# df.iloc[['QC', 'VA']]
+# df.loc['Jan']
 
-print(drop)
-print(df)
-print(df.info())
-print(df.describe())
-print(df.describe().transpose())
-print(df.head(2))
-print(df.columns)
-print(df.index)
-print(df['Jan'])
+# print(drop)
+# print(df)
+# print(df.info())
+# print(df.describe())
+# print(df.describe().transpose())
+# print(df.head(2))
+# print(df.columns)
+# print(df.index)
+# print(df['Jan'])
 
 #Files with Pandas
 #read = pd.read_csv('C:\\Users\\username\\file_path_here.csv')
@@ -233,3 +240,104 @@ print(df['Jan'])
 #model2 = Ridge(alpha=1)
 #model2.fit(X_train,y_train)
 #y_pred_two = model2.predict(X_test)
+
+# df = pd.read_csv('Advertising.csv')
+# df.head()
+# X = df.drop('sales', axis=1)
+# y = df['sales']
+# X_train,X_other,y_train,y_other = train_test_split(X,y,test_size=0.3,random_state=101)
+# X_eval, X_test, y_eval, y_test = train_test_split(X_other, y_other, test_size=0.5,random_state=101)
+# print(len(df))
+# print(len(X_train))
+# print(len(X_eval))
+# print(len(X_test))
+# # Scaling X Test Data
+# scaler = StandardScaler()
+# scaler.fit(X_train)
+# # Order to scale transform does not matter
+# X_train = scaler.transform(X_train)
+# X_test = scaler.transform(X_test)
+# X_eval = scaler.transform(X_eval)
+# # Creating Model
+# model_one = Ridge(alpha=100)
+# model_one.fit(X_train, y_train)
+# y_eval_pred = model_one.predict(X_eval)
+# print(mean_squared_error(y_eval, y_eval_pred))
+
+# model_two = Ridge(alpha=1)
+# model_two.fit(X_train, y_train)
+# new_pred_eval = model_two.predict(X_eval)
+# print(mean_squared_error(y_eval, new_pred_eval))
+
+# y_final_test_pred = model_two.predict(X_test)
+# print(mean_squared_error(y_test, y_final_test_pred))
+
+################################################################################################
+
+#Artificial Neural Networks
+
+#Non-deep neural network contain 1 hidden layer
+#Deep Neural network contains 2+ hidden layers
+
+#Composition of Neural Network
+#Input Layer: First layer that directly accepts real data values
+#Hidden Layer: Any layer between input and output layers
+#Ouput Layer: The final estimate of the output
+
+# Perceptron Model Formula:
+# z = x*w+b
+# w=weight (weight or strenght given to input/importance)
+# b=bias (offset/treshold value)
+
+#Activiation Functions:
+#Binary Step
+#Step Function
+#Dynamic Function = Sigmoid Function
+#Hyperbolic Tangent
+#Rectified Linear Unit (ReLU)
+
+#Organizing Multiple Classes
+#One-hot encoding
+
+#Softmax Function:
+#Calculates the probabilities distribution of the event over K different events
+#(Calculates the probabilities of each target class over all possible target classes)
+#Sum of all probabilities will be equal to 1
+
+#o(z)=a
+#y=true value
+#a=neuron's prediction
+#z=activation function
+
+#Cost Functions:
+#Quadratic Cost Function: Calculate difference between real values against predicted values
+
+#Cost Function consists of:
+#C(W,B,Sr,Er)
+#W=Neural Networks weight
+#B=Neural Networks biases
+#Sr=Input of single traning sample
+#Er=Desired output of that training sample
+
+#Cross Entropy Loss Function
+
+#Backpropogation
+
+################################################################################################
+
+#Keras
+df = pd.read_csv('fake_reg.csv')
+print(df.head())
+sns.pairplot(df)
+X = df[['feature1','feature2']].values
+y = df['price'].values
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+scaler = MinMaxScaler()
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+model = Sequential([
+    Dense(unit=4,activation='relu'),
+    Dense(unit=2,activation='relu'),
+    Dense(unit=1)
+    ])
