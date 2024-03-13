@@ -5,45 +5,46 @@ import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
-from keras.models import Sequential
-from keras.layers import Dense
+from keras.models import Sequential, load_model
+from keras.layers import Dense, Dropout
+from keras.callbacks import EarlyStopping
 
 #https://www.udemy.com/course/practical-ai-with-python-and-reinforcement-learning/
 
 # NumPy Arrays
-mylist = [1, 2, 3]
-type(mylist) #prints out list
+# mylist = [1, 2, 3]
+# type(mylist) #prints out list
 
-np.array(mylist)
-my_matrix = [[1,2,3], [4,5,6], [7,8,9]]
-np.array(my_matrix)
+# np.array(mylist)
+# my_matrix = [[1,2,3], [4,5,6], [7,8,9]]
+# np.array(my_matrix)
 
-np.arange(0, 10) #Creates a NumPy array that begins at 0, and ends at 9 with a size of 10
-np.arange(0, 10, 2) #Adds jump size of 2
-np.zeros((2,5)) #Creates a 2x5 dimensional array with decimal zeros
-np.ones((6,6)) #Creates a 6x6 dimensional array with decimal ones
-np.linspace(0, 10, 10) #Start=0, End=10, EvenlySpacedNumbers=10
-np.eye(5) #Creates an Identity Matrix
-np.random.rand(1) #Returns a random number between 0 and 1
-np.random.rand(5,5) #Creates a 5x5 matrix with random numbers
-np.random.randn(2,3) #Returns a standard normal distribution with mean 0 and variance 1
-np.random.randint(0, 101, 10) #Returns 10 random Integers between 0 and 101
-np.random.randint(0, 101, (4,5)) #Returns 10 random Integers between 0 and 101 in a 4x5 array
-np.random.seed(42) #Returns a set of numbers in .rand
-np.random.rand(4) #Result of .seed
-arr = np.arange(0,25)
-arr.reshape(5,5) #Reshapes array into a 5x5 array
-randarr = np.random.randint(0, 101, 10)
-randarr.max() #Returns max Number in array
-randarr.min() #Returns min Numberin array
-randarr.argmax() #Returns index of max number
-randarr.argmin() #Returns index of min number
-randarr.dtype #Returns type of array
-arr.shape #Returns shape of the array
+# np.arange(0, 10) #Creates a NumPy array that begins at 0, and ends at 9 with a size of 10
+# np.arange(0, 10, 2) #Adds jump size of 2
+# np.zeros((2,5)) #Creates a 2x5 dimensional array with decimal zeros
+# np.ones((6,6)) #Creates a 6x6 dimensional array with decimal ones
+# np.linspace(0, 10, 10) #Start=0, End=10, EvenlySpacedNumbers=10
+# np.eye(5) #Creates an Identity Matrix
+# np.random.rand(1) #Returns a random number between 0 and 1
+# np.random.rand(5,5) #Creates a 5x5 matrix with random numbers
+# np.random.randn(2,3) #Returns a standard normal distribution with mean 0 and variance 1
+# np.random.randint(0, 101, 10) #Returns 10 random Integers between 0 and 101
+# np.random.randint(0, 101, (4,5)) #Returns 10 random Integers between 0 and 101 in a 4x5 array
+# np.random.seed(42) #Returns a set of numbers in .rand
+# np.random.rand(4) #Result of .seed
+# arr = np.arange(0,25)
+# arr.reshape(5,5) #Reshapes array into a 5x5 array
+# randarr = np.random.randint(0, 101, 10)
+# randarr.max() #Returns max Number in array
+# randarr.min() #Returns min Numberin array
+# randarr.argmax() #Returns index of max number
+# randarr.argmin() #Returns index of min number
+# randarr.dtype #Returns type of array
+# arr.shape #Returns shape of the array
 
 ################################################################################################
 
@@ -167,27 +168,27 @@ arr.shape #Returns shape of the array
 ################################################################################################
 
 #Pandas
-myindex = ['Canada', 'Uganda', 'Australia']
-mydata = ['CA', 'UG', 'AU']
-myser = pd.Series(data=mydata, index=myindex)
-print(myser)
-print(myser[0])
-print(myser['Uganda'])
-print(myser.keys())
+# myindex = ['Canada', 'Uganda', 'Australia']
+# mydata = ['CA', 'UG', 'AU']
+# myser = pd.Series(data=mydata, index=myindex)
+# print(myser)
+# print(myser[0])
+# print(myser['Uganda'])
+# print(myser.keys())
 
-ages = {'Jean-Paul':5,'Francois':10,'Genevieve':50}
-pd.Series(ages)
+# ages = {'Jean-Paul':5,'Francois':10,'Genevieve':50}
+# pd.Series(ages)
 
-mycompanies = ['Microsoft', 'Google', 'Nvidia']
-sales = [0.5, 2, 10]
+# mycompanies = ['Microsoft', 'Google', 'Nvidia']
+# sales = [0.5, 2, 10]
 
-mycompanies1 = ['Microsoft', 'Google', 'Nvidia']
-sales1 = [2, 3, 20]
+# mycompanies1 = ['Microsoft', 'Google', 'Nvidia']
+# sales1 = [2, 3, 20]
 
-sales_q1 = pd.Series(index=mycompanies,data=sales)
-sales_q2 = pd.Series(index=mycompanies1,data=sales1)
-total_sales = sales_q1.add(sales_q2,fill_value=0)
-print(total_sales)
+# sales_q1 = pd.Series(index=mycompanies,data=sales)
+# sales_q2 = pd.Series(index=mycompanies1,data=sales1)
+# total_sales = sales_q1.add(sales_q2,fill_value=0)
+# print(total_sales)
 
 #Dataframes in Pandas
 
@@ -326,18 +327,168 @@ print(total_sales)
 ################################################################################################
 
 #Keras
-df = pd.read_csv('fake_reg.csv')
-print(df.head())
-sns.pairplot(df)
-X = df[['feature1','feature2']].values
-y = df['price'].values
-X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+# df = pd.read_csv('fake_reg.csv')
+# print(df.head())
+# sns.pairplot(df)
+# X = df[['feature1','feature2']].values
+# y = df['price'].values
+# X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+# scaler = MinMaxScaler()
+# scaler.fit(X_train)
+# X_train = scaler.transform(X_train)
+# X_test = scaler.transform(X_test)
+# model = Sequential([
+#     Dense(unit=4,activation='relu'),
+#     Dense(unit=2,activation='relu'),
+#     Dense(unit=1)
+#     ])
+
+# model = Sequential()
+# model.add(Dense(4,activation='relu')) #unit = neuron
+# model.add(Dense(4,activation='relu'))
+# model.add(Dense(4,activation='relu'))
+# model.add(Dense(1))
+# model.compile(optimizer='rmsprop',loss='mse')
+
+# model.fit(x=X_train,y=y_train,epochs=250) #Train/Fit Model
+#epochs=number of times it iterates
+
+# loss_df = pd.DataFrame(model.history.history)
+# loss_df.plot()
+# plt.show()
+
+# model.evaluate(X_train,y_train,verbose=0)
+# test_predictions = model.predict(X_test)
+# test_predictions = pd.Series(test_predictions.reshape(300,))
+# pred_df = pd.DataFrame(y_test, columns=['Test True Y'])
+# pred_df = pd.concat([pred_df,test_predictions],axis=1)
+# pred_df.columns = ['Test True Y', 'Model Predictions']
+# sns.scatterplot(x='Test True Y',y='Model Predictions',data=pred_df)
+# mean_absolute_error(pred_df['Test True Y'], pred_df['Model Predictions'])
+# mean_squared_error(pred_df['Test True Y'], pred_df['Model Predictions'])
+# df.describe()
+# print(pred_df)
+
+#To save a model
+#model.save('model_name')
+#model_name = load_model('model_name')
+
+
+
+# df = pd.read_csv('kc_house_data.csv')
+# df.isnull() #returns back true if something is null
+# df.isnull().sum() #returns sum of nulls
+# df.head()
+# df.describe().transpose()
+
+# plt.figure(figsize=(10,6))
+# sns.histplot(df['price'])
+# plt.show()
+
+# sns.countplot(df['bedrooms'])
+# plt.show()
+
+# df.corr()
+# print(df.corr()['price'].sort_values())
+# plt.figure(figsize=(10,5))
+# sns.scatterplot(x='price',y='sqft_living',data=df)
+# plt.show()
+
+# plt.figure(figsize=(10,6))
+# sns.boxplot(x='bedrooms',y='price',data=df)
+# plt.show()
+
+# plt.figure(figsize=(12,8))
+# sns.scatterplot(x='price',y='long',data=df)
+# plt.show()
+
+# plt.figure(figsize=(12,8))
+# sns.scatterplot(x='price',y='lat',data=df)
+# plt.show()
+
+# plt.figure(figsize=(12,8))
+# sns.scatterplot(x='long',y='lat',data=df)
+# plt.show()
+
+# plt.figure(figsize=(12,8))
+# sns.scatterplot(x='long',y='lat',data=df,hue='price')
+# plt.show()
+
+# print(df.sort_values('price', ascending=False).head(20))
+# len(df) #num of houses
+# len(df) * 0.01 #top 1%
+
+# non_top_1_percent = df.sort_values('price', ascending=False).iloc[216:]
+# plt.figure(figsize=(12,8))
+# sns.scatterplot(x='long',y='lat',data=non_top_1_percent,edgecolor=None,hue='price',alpha=0.2,palette='Accent')
+# plt.show()
+
+# sns.boxplot(x='waterfront',y='price',data=df)
+
+# df = df.drop('id',axis=1)
+# df['date'] = pd.to_datetime(df['date'])
+# df['year'] = df['date'].apply(lambda date: date.year)
+# df['month'] = df['date'].apply(lambda date: date.month)
+# df.drop('date',axis=1)
+# print(df.head())
+
+# plt.figure(figsize=(10,5))
+# sns.boxplot(x='month',y='price',data=df)
+# print(df.groupby('month').mean()['price'])
+# print(df['zipcode'].value_counts())
+# print(df['sqft_basement'].value_counts())
+# df = df.drop('zipcode',axis=1)
+# plt.show()
+
+# X = df.drop('price',axis=1).values
+# y = df['price'].values
+# X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=101)
+# scaler = MinMaxScaler()
+# X_train = scaler.fit_transform(X_train)
+# X_test = scaler.transform(X_test)
+# model = Sequential()
+# print(X_train.shape) #second param is number of nodes which is 19
+# model.add(Dense(19,activation='relu'))
+# model.add(Dense(19,activation='relu'))
+# model.add(Dense(19,activation='relu'))
+# model.add(Dense(19,activation='relu'))
+
+# model.add(Dense(1))
+# model.compile(optimizer='adam',loss='mse')
+# model.fit(x=X_train,y=y_train,validation_data=(X_test,y_test),batch_size=128,epochs=400)
+# print(model.history.history)
+# print(pd.DataFrame(model.history.history))
+
+# losses = pd.DataFrame(model.history.history)
+# losses.plot()
+# plt.show()
+
+df = pd.read_csv('cancer_classification.csv')
+print(df.describe().transpose())
+
+sns.countplot(x='benign_0__mal_1',data=df)
+plt.show()
+
+print(df.corr()['benign_0__mal_1'].sort_values().plot(kind='bar'))
+plt.show()
+
+plt.figure(figsize=(12,12))
+sns.heatmap(df.corr())
+plt.show()
+
+X = df.drop('benign_0__mal_1',axis=1).values
+y = df['benign_0__mal_1'].values
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=101)
 scaler = MinMaxScaler()
-scaler.fit(X_train)
-X_train = scaler.transform(X_train)
+X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
-model = Sequential([
-    Dense(unit=4,activation='relu'),
-    Dense(unit=2,activation='relu'),
-    Dense(unit=1)
-    ])
+
+model = Sequential()
+model.add(Dense(30,activation='relu'))
+model.add(Dense(15,activation='relu'))
+model.add(Dense(1,activation='sigmoid'))
+model.compile(loss='binary_crossentropy',optimizer='adam')
+model.fit(x=X_train,y=y_train,epochs=600,validation_data=(X_test,y_test))
+losses = pd.DataFrame(model.model.history)
+losses.plot()
+plt.show()
