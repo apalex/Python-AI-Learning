@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.image import imread
 import pandas as pd
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
@@ -10,8 +11,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
 from keras.models import Sequential, load_model
-from keras.layers import Dense, Dropout
-from keras.callbacks import EarlyStopping
+from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten
+from keras.callbacks import EarlyStopping, TensorBoard
+from keras.datasets import mnist, cifar10
+from keras.utils import to_categorical
+from keras.preprocessing.image import ImageDataGenerator
+from datetime import datetime
+import os
 
 #https://www.udemy.com/course/practical-ai-with-python-and-reinforcement-learning/
 
@@ -500,7 +506,179 @@ from keras.callbacks import EarlyStopping
 # print(classification_report(y_test, predictions))
 # print(confusion_matrix(y_test,predictions))
 
+################################################################################################
+
+#Convulutional Neural Networks with TensorFlow
+
+
+# (x_train,y_train), (x_test,y_test) = mnist.load_data()
+# print(x_train.shape)
+# print(y_train)
+# single_image = x_train[0]
+# print(single_image.shape)
+# plt.imshow(single_image)
+
+# y_example = to_categorical(y_train)
+# print(y_example.shape)
+# print(y_example[0])
+
+# y_cat_test = to_categorical(y_test,num_classes=10)
+# y_cat_train = to_categorical(y_train,10)
+# x_train = x_train/255 #255 is single_image.max() value
+# x_test = x_test/255
+# scaled_image = x_train[0]
+# print(scaled_image.max()) #scaled_image will be equaled to 1
+
+# print(x_train.shape)
+# x_train = x_train.reshape(60000,28,28,1) #batch_size,width,height,color_channels
+# x_test = x_test.reshape(10000,28,28,1)
+
+# model = Sequential()
+# model.add(Conv2D(filters=32,kernel_size=(4,4),strides=(1,1),input_shape=(28,28,1),activation='relu'))
+# model.add(MaxPool2D(pool_size=(2,2)))
+# model.add(Flatten())
+# model.add(Dense(128,activation='relu'))
+
+# #Softmax because multiclass problem
+# model.add(Dense(10,activation='softmax'))
+
+# model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+
+# early_stop = EarlyStopping(monitor='val_loss',patience=1)
+# model.fit(x_train,y_cat_train,epochs=10,validation_data=(x_test,y_cat_test),callbacks=[early_stop])
+
+# metrics = pd.DataFrame(model.history.history)
+# metrics[['loss','val_loss']].plot()
+# plt.show()
+
+# metrics[['accuracy','val_accuracy']].plot()
+# plt.show()
+
+# model.evaluate(x_test,y_cat_test,verbose=0)
+
+# predictions = model.predict_classes(x_test)
+# print(classification_report(y_test,predictions))
+# print(confusion_matrix(y_test,predictions))
+# plt.figure(figsize=(10,6))
+# sns.heatmap(confusion_matrix(y_test,predictions))
+# plt.show()
+# my_num = x_test[0]
+# plt.imshow(my_num.reshape(28,28))
+# plt.show()
+# model.predict_classes(my_num.reshape(1,28,28,1))
 
 
 
+
+# (x_train,y_train), (x_test,y_test) = cifar10.load_data()
+
+# print(x_train.shape)
+# print(x_train[0].shape)
+
+# plt.imshow(x_train[6])
+# plt.show()
+
+# print(x_train[6].max())
+
+# x_train = x_train/255
+# x_test = x_test/255
+
+# y_cat_train = to_categorical(y_train,10)
+# y_cat_test = to_categorical(y_test,10)
+
+# model = Sequential()
+# model.add(Conv2D(filters=32,kernel_size=(4,4),strides=(1,1),input_shape=(32,32,3),activation='relu'))
+# model.add(MaxPool2D(pool_size=(2,2)))
+# model.add(Conv2D(filters=16,kernel_size=(4,4),strides=(1,1),input_shape=(32,32,3),activation='relu'))
+# model.add(MaxPool2D(pool_size=(2,2)))
+
+# model.add(Flatten())
+# model.add(Dense(256,activation='relu'))
+
+# model.add(Dense(10,activation='softmax'))
+
+# model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+# print(model.summary())
+
+# early_stop = EarlyStopping(monitor='val_loss',patience=2)
+# model.fit(x_train,y_cat_train,epochs=15,validation_data=(x_test,y_cat_test),callbacks=[early_stop])
+
+# metrics = pd.DataFrame(model.history.history)
+# metrics[['loss','val_accuracy']].plot()
+# plt.show()
+
+# metrics[['loss','val_loss']].plot()
+# plt.show()
+
+# print(model.evaluate(x_test,y_cat_test,verbose=0))
+
+# predictions = model.predict_classes(x_test)
+# print(classification_report(y_test,predictions))
+
+# print(confusion_matrix(y_test,predictions))
+
+# plt.figure(figsize=(10,16))
+# sns.heatmap(confusion_matrix(y_test,predictions))
+# plt.show()
+
+# my_image = x_test[0]
+# plt.imshow(my_image)
+# plt.show()
+# model.predict_classes(my_image.reshape(1,32,32,3))
+
+
+
+
+# data_dir = 'C:\\Users\\prodo\\Downloads\\cell_images\\cell_images'
+# print(os.listdir(data_dir))
+
+# test_path = data_dir + '\\test\\'
+# train_path = data_dir + '\\train\\'
+# print(os.listdir(test_path))
+# print(os.listdir(train_path))
+
+# print(os.listdir(train_path+'parasitized')[0])
+
+# dim1 = []
+# dim2 = []
+# for image_filename in os.listdir(test_path+'uninfected'):
+#     img = imread(test_path+'uninfected\\'+image_filename)
+#     d1,d2,colors = img.shape
+#     dim1.append(d1)
+#     dim2.append(d2)
+
+# sns.joinplot(dim1,dim2)
+
+# print(np.mean(dim1))
+# print(np.mean(dim2))
+# image_shape = (130,130,2)
+
+# image_gen = ImageDataGenerator(rotation_range=20,width_shift_range=0.1,height_shift_range=0.1,shear_range=0.1,zoom_range=0.1,horizontal_flip=True,fill_mode='nearest')
+
+# model = Sequential()
+# model.add(Conv2D(filters=32,kernel_size=(3,3),input_shape=image_shape,activation='relu'))
+# model.add(MaxPool2D(pool_size=(2,2)))
+# model.add(Conv2D(filters=64,kernel_size=(3,3),input_shape=image_shape,activation='relu'))
+# model.add(MaxPool2D(pool_size=(2,2)))
+# model.add(Conv2D(filters=64,kernel_size=(3,3),input_shape=image_shape,activation='relu'))
+# model.add(MaxPool2D(pool_size=(2,2)))
+# model.add(Flatten())
+# model.add(Dense(128,activation='relu'))
+# model.add(Dropout(0.5))
+# model.add(Dense(1,activation='sigmoid'))
+# model.compile(loss='binary_crossentropy',optimizer='adam')
+# print(model.summary())
+
+# early_stop = EarlyStopping(monitor='val_loss',patience=2)
+# train_image_gen = image_gen.flow_from_directory(train_path,target_size=image_shape[:2],
+#                                                 color_mode='rgb',batch_size=16,class_mode='binary')
+# test_image_gen = image_gen.from_flow_directory(test_path,target_size=image_shape[:2],
+#                                                color_mode='rgb',batch_size=16,class_mode='binary',
+#                                                shuffle=False)
+
+# results = model.fit_generator(train_image_gen,epochs=20,validation_data=test_image_gen,callbacks=[early_stop])
+# model.evaluate_generator(test_image_gen)
+# prediction = model.predict_generator(test_image_gen)
+
+################################################################################################
 
