@@ -15,9 +15,10 @@ from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten
 from keras.callbacks import EarlyStopping, TensorBoard
 from keras.datasets import mnist, cifar10
 from keras.utils import to_categorical
-from keras.preprocessing.image import ImageDataGenerator
 from datetime import datetime
 import os
+import gym
+import time
 
 #https://www.udemy.com/course/practical-ai-with-python-and-reinforcement-learning/
 
@@ -682,3 +683,45 @@ import os
 
 ################################################################################################
 
+#Reinforcement Learning Theory
+
+#Agent -> Action -> Environment -> Reward (Negative or Positive) -> Observation (State) -> Agent
+
+################################################################################################
+
+#OpenAI Gym
+
+env = gym.make('MountainCar-v0', render_mode="human")
+
+print(env.action_space)
+
+def simple_agent(observation):
+    position, velocity = observation
+    
+    #When to go right
+    if -0.1 < position.any() < 0.4:
+        action = 2
+    
+    #When to go left
+    elif velocity.any() < 0 and position.any() < -0.2:
+        action = 0
+    
+    else:
+        action = 1
+    
+    return action
+
+observation = env.reset()
+for step in range(500):
+    action = simple_agent(observation)
+    observation,reward,terminated,truncated,info = env.step(action)
+    done = terminated or truncated
+    env.render()
+    
+    # print(f"Observation: {observation}")
+    # print(f"Position: {observation[0]}")
+    # print(f"Velocity: {observation[1]}")
+    
+    time.sleep(0.001)
+
+env.close()
