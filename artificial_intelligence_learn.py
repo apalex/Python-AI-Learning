@@ -19,6 +19,9 @@ from datetime import datetime
 import os
 import gym
 import time
+from collections import deque
+from rl.agents.dqn import DQNAgent
+from rl.memory import SequentialMemory
 
 #https://www.udemy.com/course/practical-ai-with-python-and-reinforcement-learning/
 
@@ -691,37 +694,118 @@ import time
 
 #OpenAI Gym
 
-env = gym.make('MountainCar-v0', render_mode="human")
+# env = gym.make('MountainCar-v0', render_mode="human")
 
-print(env.action_space)
+# print(env.action_space)
 
-def simple_agent(observation):
-    position, velocity = observation
+# def simple_agent(observation):
+#     position, velocity = observation
     
-    #When to go right
-    if -0.1 < position.any() < 0.4:
-        action = 2
+#     #When to go right
+#     if -0.1 < position.any() < 0.4:
+#         action = 2
     
-    #When to go left
-    elif velocity.any() < 0 and position.any() < -0.2:
-        action = 0
+#     #When to go left
+#     elif velocity.any() < 0 and position.any() < -0.2:
+#         action = 0
     
-    else:
-        action = 1
+#     else:
+#         action = 1
     
-    return action
+#     return action
 
-observation = env.reset()
-for step in range(500):
-    action = simple_agent(observation)
-    observation,reward,terminated,truncated,info = env.step(action)
-    done = terminated or truncated
-    env.render()
+# observation = env.reset()
+# for step in range(500):
+#     action = simple_agent(observation)
+#     observation,reward,terminated,truncated,info = env.step(action)
+#     done = terminated or truncated
+#     env.render()
     
-    # print(f"Observation: {observation}")
-    # print(f"Position: {observation[0]}")
-    # print(f"Velocity: {observation[1]}")
+#     # print(f"Observation: {observation}")
+#     # print(f"Position: {observation[0]}")
+#     # print(f"Velocity: {observation[1]}")
     
-    time.sleep(0.001)
+#     time.sleep(0.001)
 
-env.close()
+# env.close()
+
+
+# epsilon = 1
+# max_epsilon = 1
+# min_epsilon = 0.01
+# decay_rate = 0.001
+
+# def epsilon_greedy_action_selection(epsilon,q_table,discrete_state):
+#     random_number = np.random_number()
+    
+#     # Exploitation
+#     if random_number > epsilon:
+#         state_row = q_table[discrete_state,:]
+#         action = np.argmax(state_row)
+    
+#     # Exploration
+#     else:
+#         action = env.action_space.sample()
+#     return action
+
+# ALPHA = 0.8 # Learning Rate
+# GAMMA = 0.95 # Discount Rate gamma^2 r + gamma^3 ...
+# def compute_next_q_value(old_q_value,reward,next_optimal_q_value):
+#     return old_q_value + ALPHA * (reward + GAMMA * next_optimal_q_value - old_q_value)
+
+# def reduce_epsilon(epsilon,epoch):
+#     return min_epsilon + (max_epsilon-min_epsilon)*np.exp(-decay_rate*epoch)
+
+# rewards = []
+# EPOCHS = 2000
+# log_interval = 100
+
+# for episode in range(EPOCHS):
+#     state = env.reset()
+#     done = False
+#     total_rewards = 0
+    
+#     while not done:
+        
+#         #Action
+#         action = epsilon_greedy_action_selection(epsilon,q_table,discrete_state)
+        
+#         #State, Reward, Done, Info
+#         new_state,reward,done,info = env.step(action)
+        
+#         #Old(Current) Q Value
+#         old_q_value = q_table[state,action]
+        
+#         #Get Next Optimal Q Value (max Q Value)
+#         next_optimal_q_value = np.max(q_table[new_state,:])
+        
+#         #Compute Next Q Value
+#         next_q = compute_next_q_value(old_q_value,reward,next_optimal_q_value)
+        
+#         #Update Table
+#         q_table[state,action] = next_q
+        
+#         #Track Rewards
+#         total_rewards += reward
+        
+#         #New State
+#         state = new_state
+#     episode += 1
+#     epsilon = reduce_epsilon(epsilon=epsilon,epoch=episode)
+#     rewards.append(total_rewards)
+    
+#     if episode % log_interval == 0:
+#         print(np.sum(rewards))
+
+# def reduce_epsilon(epsilon,epoch):
+#     if BURN_IN <= epoch <= EPSILON_END:
+#         epsilon -= EPSILON_REDUCE
+#     return epsilon
+
+# def fail(done,points,reward):
+#     if done and points < 150:
+#         reward = -200
+#     return reward
+
+# env.close()
+
